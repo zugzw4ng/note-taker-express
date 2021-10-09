@@ -1,11 +1,12 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const uuid = require("./utils/uuid");
 
 const app = express();
 const PORT = process.env.PORT || 3001
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -25,8 +26,7 @@ app.get("*", (req, res) => {
 app.post("/api/notes", (req, res) => {
     let newNote = req.body;
     let noteList = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-    let notelength = (noteList.length).toString();
-    newNote.id = notelength;
+    newNote.id = uuid();
     noteList.push(newNote);
     fs.writeFileSync("./db/db.json", JSON.stringify(noteList));
     res.json(noteList);
